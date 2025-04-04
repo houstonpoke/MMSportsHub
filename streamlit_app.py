@@ -20,6 +20,10 @@ result = model_mgr.predict_game("Cowboys", "Texans")
 
 st.write("Model Prediction:", result)
 st.markdown("---")
-st.markdown("Navigate to pages using sidebar:")
-st.markdown("- 📈 Elo Predictions
-- 🔬 Research Hub")
+
+# ✅ FIXED MULTILINE MARKDOWN BLOCK
+st.markdown("""
+### Navigate to pages:
+- 📈 [Elo Predictions](pages/predict_elo.py)
+- 🔬 [Research Hub](pages/research_hub.py)
+""")
