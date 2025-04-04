@@ -1,20 +1,23 @@
 import streamlit as st
 
 st.set_page_config(page_title="MM Sports Hub", layout="wide")
-st.sidebar.title("📊 Navigation")
-st.sidebar.page_link("streamlit_app.py", label="🏠 Overview", icon="🏠")
-st.sidebar.page_link("pages/predict_elo.py", label="📈 Elo Predictions")
-st.sidebar.page_link("pages/research_hub.py", label="🔬 Research Hub")
-
 st.title("🤠 MM Sports Hub")
-st.subheader("Welcome to the Sports Betting Intelligence Platform")
+
+st.markdown("### Welcome to the Sports Betting Intelligence Platform")
 
 st.markdown("""
-**MM Sports Hub** delivers real-time predictive modeling and betting analytics, powered by:
+MM Sports Hub delivers real-time predictive modeling and betting analytics, powered by:
 - ⚡ Elo & Logistic Regression models
-- 🔮 Upcoming model-based insights
-- 📈 Live odds (mock data for now)
+- 🔮 Model-based matchup insights
+- 📈 (Coming soon) Live odds vs model edges
 - 🧠 Research & ROI evaluation tools
 
-Use the sidebar to navigate through the app.
+---
+
+### 🧭 Navigation:
+
+- 📈 [Elo Predictions](pages/predict_elo.py)
+- 🔬 [Research Hub](pages/research_hub.py)
+
+You can also explore the `pages/` folder for direct access.
 """)
