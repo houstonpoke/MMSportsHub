@@ -1,30 +1,58 @@
 import streamlit as st
-from data_integrations.odds_api import get_mock_odds
+from data_integrations.odds_api import get_real_odds
 from predictive_models.model_manager import ModelManager
 
 st.set_page_config(page_title="MM Sports Hub", layout="wide")
 st.title("🤠 MM Sports Hub")
-st.subheader("Today's Top Game")
+st.markdown("## 📊 Today's Top Games (Live Odds + Model Predictions)")
 
-# Load mock odds
-odds = get_mock_odds()
-st.markdown(f"### {odds['game']}")
-st.write("Moneyline Odds:")
-st.write(f"🏈 {list(odds['odds'].keys())[0]}: {odds['odds'][list(odds['odds'].keys())[0]]}")
-st.write(f"🏈 {list(odds['odds'].keys())[1]}: {odds['odds'][list(odds['odds'].keys())[1]]}")
+# --- Get Real Odds ---
+odds_data = get_real_odds(sport="basketball_nba")
 
-# Predict game outcome using Elo
+# --- Initialize Elo Model ---
 model_mgr = ModelManager()
 model_mgr.train_from_history([
-    {'team_a': 'Cowboys', 'team_b': 'Texans', 'winner': 'Cowboys'},
-    {'team_a': 'Texans', 'team_b': 'Chiefs', 'winner': 'Chiefs'},
+    {'team_a': 'Lakers', 'team_b': 'Warriors', 'winner': 'Lakers'},
+    {'team_a': 'Warriors', 'team_b': 'Clippers', 'winner': 'Clippers'},
 ])
-result = model_mgr.predict_game("Cowboys", "Texans")
 
-st.write("📊 Model Prediction:", result)
-st.markdown("---")
+# --- Show Top Games ---
+if isinstance(odds_data, list) and len(odds_data) > 0:
+    for game in odds_data[:5]:  # Show top 5 games
+        home = game['home_team']
+        away = game['away_team']
+        teams = f"{away} @ {home}"
+
+        # Model Prediction
+        prediction = model_mgr.predict_game(away, home)
+        team_a_win = prediction['team_a_win_prob']
+        team_b_win = prediction['team_b_win_prob']
+        edge = abs(team_a_win - 0.5)
+
+        # Confidence Color
+        if edge > 0.15:
+            confidence = "🟢 High"
+        elif edge > 0.08:
+            confidence = "🟡 Medium"
+        else:
+            confidence = "🔴 Low"
+
+        st.subheader(teams)
+        st.write(f"📈 Model Prediction: {away} {int(team_a_win*100)}% | {home} {int(team_b_win*100)}%")
+        st.write(f"📊 Confidence Level: {confidence}")
+
+        if game.get('bookmakers'):
+            book = game['bookmakers'][0]
+            st.write(f"🧾 Bookmaker: {book['title']}")
+            for outcome in book['markets'][0]['outcomes']:
+                st.write(f"{outcome['name']}: {outcome['price']}")
+        st.markdown("---")
+else:
+    st.error("Failed to load live odds. Check your API key or request limit.")
+
+# --- Navigation Help ---
 st.markdown("""
-### Navigation:
-- 📈 Go to `pages/predict_elo.py` for Elo Predictions
-- 🔬 Go to `pages/research_hub.py` for Model Research
+### 🔀 Navigation:
+- 📈 Use sidebar or pages folder to open `Elo Predictions`
+- 🔬 Open `Research Hub` for glossary and stats
 """)
