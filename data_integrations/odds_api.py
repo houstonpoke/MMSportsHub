@@ -3,7 +3,7 @@ import requests
 
 API_KEY = "1a7dd942e4119ae3247632e1773aaefb"
 
-def get_real_odds(sport="basketball_nba", region="us", market="h2h"):
+def get_real_odds(sport="basketball_nba", region="us", market="h2h,spreads,totals"):
     url = f"https://api.the-odds-api.com/v4/sports/{sport}/odds"
     params = {
         "apiKey": API_KEY,
