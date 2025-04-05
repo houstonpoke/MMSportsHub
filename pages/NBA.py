@@ -11,11 +11,13 @@ def analyze_market(market_key, outcomes, team_a, team_b):
         name = outcome['name']
         price = outcome['price']
         implied = calculate_implied_probability(price)
-        model_win_prob = win_probability(team_a, team_b) if name == team_a else 1 - win_probability(team_a, team_b)
-        morrows_edge = round((model_win_prob - implied) * 100, 1)
+        model_win_prob, elo_a, elo_b = win_probability(team_a, team_b)
+        actual_model_win_prob = model_win_prob if name == team_a else 1 - model_win_prob
+        morrows_edge = round((actual_model_win_prob - implied) * 100, 1)
         confidence = "🟢 High" if morrows_edge > 5 else "🟡 Medium" if morrows_edge > 2 else "🔴 Low"
         st.markdown(f"**{name}**: {price} (Implied Win %: {int(implied * 100)}%)")
-        st.markdown(f"- Model Win %: {int(model_win_prob * 100)}%")
+        st.markdown(f"- Model Win %: {int(actual_model_win_prob * 100)}%")
+        st.markdown(f"- Elo Used: {elo_a} vs {elo_b}")
         st.markdown(f"- 💡 Morrow's Edge: {morrows_edge} — {confidence}")
         st.markdown(f"**Bet Recommendation:** {name} {market_key.upper()} — {confidence}")
         st.markdown("---")
