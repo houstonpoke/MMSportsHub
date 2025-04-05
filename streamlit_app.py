@@ -1,5 +1,5 @@
 
 import streamlit as st
 st.set_page_config(page_title="MM Sports Hub", layout="wide")
-st.title("🤠 MM Sports Hub")
-st.markdown("Welcome to the Hub. Use the sidebar to access each sport tab with real odds and analysis.")
+st.title("🤠 MM Sports Hub with Real Elo Model")
+st.markdown("NBA & NCAAB tabs now include real Elo model-based win predictions and Morrow's Edge.")
