@@ -1,12 +1,20 @@
 import streamlit as st
+from data_integrations.odds_api import get_real_odds
+
 st.title("⛳ Golf - MM Sports Hub")
 
-st.markdown("### Outright Odds & Model Prediction")
-st.write("Player: John Smith")
-st.write("Odds: +2200")
-st.write("Form Score: 88")
-st.write("Strokes Gained Total: +1.4")
-st.write("📊 Morrow's Edge: 6.2 🟢 High Confidence")
+st.markdown("### Outright Odds & Prediction")
+odds = get_real_odds(sport="golf_masters")
+if isinstance(odds, list):
+    for game in odds[:3]:
+        st.subheader(f"{game['home_team']} vs {game['away_team']}")
+        if game.get('bookmakers'):
+            book = game['bookmakers'][0]
+            st.write(f"Bookmaker: {book['title']}")
+            for outcome in book['markets'][0]['outcomes']:
+                st.write(f"{outcome['name']}: {outcome['price']}")
+else:
+    st.error("Failed to load odds.")
 
 st.markdown("### Track Your Bet")
 st.text_input("Player")
