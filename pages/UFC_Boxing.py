@@ -1,3 +1,4 @@
+from edge_legend import show_edge_legend
 import streamlit as st
 
 # Simulated fighter stats and odds
