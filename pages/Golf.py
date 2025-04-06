@@ -1,7 +1,9 @@
-from edge_legend import show_edge_legend
 import streamlit as st
 from predictive_models.model_manager import get_elo
 from data_integrations.odds_api import get_real_odds
+from edge_legend import show_edge_legend
+
+show_edge_legend()
 
 # Simulated dynamic Elo scores for demo
 TOURNAMENTS = {
