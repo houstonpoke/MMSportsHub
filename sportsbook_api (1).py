@@ -1,22 +1,22 @@
-import streamlit as st
+# 📁 sportsbook_api.py
+
 import requests
+import os
 
-# Securely get your API key from .streamlit/secrets.toml
-RAPIDAPI_KEY = st.secrets["RAPIDAPI_KEY"]
-BASE_URL = "https://sportsbook-api2.p.rapidapi.com"
+ODDS_API_KEY = os.getenv('ODDS_API_KEY')  # Make sure this is set in your Streamlit secrets
 
-HEADERS = {
-    "x-rapidapi-host": "sportsbook-api2.p.rapidapi.com",
-    "x-rapidapi-key": RAPIDAPI_KEY
-}
+def get_sportsbook_odds(sport_key='basketball_nba', region='us', markets='h2h,spreads,totals'):
+    url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
+    params = {
+        'apiKey': ODDS_API_KEY,
+        'regions': region,
+        'markets': markets,
+        'oddsFormat': 'american'
+    }
+    response = requests.get(url, params=params)
+    
+    if response.status_code != 200:
+        print(f"Error fetching odds: {response.status_code} - {response.text}")
+        return []
 
-def get_sportsbook_odds(market_type="ARBITRAGE", league="NBA"):
-    url = f"{BASE_URL}/v0/advantages/?type={market_type}&league={league.upper()}"
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=10)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return {"error": f"Failed with status {response.status_code}"}
-    except Exception as e:
-        return {"error": str(e)}
+    return response.json()
